@@ -11,6 +11,7 @@ import (
 )
 
 func main() {
+	log.Println("Application starting...")
 	err := godotenv.Load()
 	if err != nil {
 		log.Println(".env not found")
