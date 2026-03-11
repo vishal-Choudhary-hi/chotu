@@ -36,25 +36,31 @@ func InitMySQL() error {
 		os.Getenv("DB_NAME"),
 	)
 
+	log.Printf("MySQL DSN host: %s port: %s\n",
+		os.Getenv("DB_HOST"),
+		os.Getenv("DB_PORT"),
+	)
+
 	var err error
 
 	for i := 0; i < 10; i++ {
 
 		DB, err = sql.Open("mysql", dsn)
-		if err == nil {
-			err = DB.Ping()
-			if err == nil {
-				break
-			}
+		if err != nil {
+			log.Printf("sql.Open error: %v\n", err)
+			time.Sleep(3 * time.Second)
+			continue
 		}
 
-		log.Println("Waiting for MySQL...")
+		err = DB.Ping()
+		if err == nil {
+			log.Println("Connected to MySQL!")
+			return migrate()
+		}
+
+		log.Printf("Waiting for MySQL... attempt %d error: %v\n", i+1, err)
 		time.Sleep(3 * time.Second)
 	}
 
-	if err != nil {
-		return err
-	}
-	log.Println("Connected to MySQL!")
-	return migrate()
+	return fmt.Errorf("failed to connect mysql: %v", err)
 }
