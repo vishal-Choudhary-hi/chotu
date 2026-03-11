@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
 
@@ -43,12 +44,12 @@ func ShortenURL(w http.ResponseWriter, r *http.Request) {
 func RedirectURL(w http.ResponseWriter, r *http.Request) {
 
 	code := chi.URLParam(r, "code")
-
+	log.Println("redirecting code:", code)
 	url, err := service.GetOriginalURL(code)
 	if err != nil {
 		http.Error(w, "url not found", http.StatusNotFound)
 		return
 	}
 
-	http.Redirect(w, r, url, http.StatusFound)
+	json.NewEncoder(w).Encode(url)
 }
