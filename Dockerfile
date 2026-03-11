@@ -11,4 +11,4 @@ RUN go build -o chotu ./cmd/server
 
 EXPOSE 8080
 
-CMD ["./chotu"]
+CMD ["sh", "-c", "echo 'CONTAINER STARTED'; ls -la; ./chotu"]
