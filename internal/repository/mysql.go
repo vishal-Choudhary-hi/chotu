@@ -28,7 +28,7 @@ func migrate() error {
 
 func InitMySQL() error {
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true?tls=false",
 		os.Getenv("DB_USER"),
 		os.Getenv("DB_PASS"),
 		os.Getenv("DB_HOST"),
@@ -55,6 +55,6 @@ func InitMySQL() error {
 	if err != nil {
 		return err
 	}
-
+	log.Println("Connected to MySQL!")
 	return migrate()
 }
